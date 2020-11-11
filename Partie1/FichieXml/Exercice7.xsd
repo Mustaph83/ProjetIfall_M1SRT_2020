@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <!--Definir les elements simples -->
+    <xsd:element name="nom" type="xsd:string"/>
+    <xsd:element name="adresse" type="xsd:string"/>
+    <xsd:element name="nom_restaurateur" type="xsd:string"/>
+    <xsd:element name="liste" type="xsd:string"/>
+    <xsd:element name="texte" type="xsd:string"/>
+    <xsd:element name="paragraphe_unique" type="xsd:string"/>
+
+
+    <!--Definir les attribut sans restruction  -->
+    <xsd:attribute name="url" type="xsd:string"/>
+    <xsd:attribute name="titre" type="xsd:string"/>
+    <xsd:attribute name="description" type="xsd:string"/>
+    <xsd:attribute name="id" type="xsd:NCName" />
+    <xsd:attribute name="refCarte" type="xsd:NCName" />
+
+
+    <!-- Definir l'atribut positions avec des restruction-->
+    <xsd:attribute name="position">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="droite"/>
+                <xsd:enumeration value="centre"/>
+                <xsd:enumeration value="gauche"/>
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:attribute>
+
+<!-- Definir l'attribut devise avec des restructions -->
+    <xsd:attribute name="devise">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="fr" />
+                <xsd:enumeration value="EURO" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:attribute>
+    <!-- Definir l'atribut positions avec des restruction-->
+    <xsd:attribute name="typeDePlat">     
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="entree"/>
+                <xsd:enumeration value="dessert"/>
+                <xsd:enumeration value="plat"/>
+                <xsd:enumeration value="fromage"/>
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:attribute>
+
+<!-- Premiere partie  -->
+	<!-- Definir l'element complexe image -->
+	<xsd:element name="image">
+	    <xsd:complexType>
+			<xsd:attribute ref="url" use="required"/>
+			<xsd:attribute ref="position" use="required"/>
+		</xsd:complexType>
+	</xsd:element>
+
+<!-- Definir l element complexe paragraphe-->
+   <xsd:element name="paragraphe">
+	   <xsd:complexType>
+		    <xsd:sequence>
+	            <xsd:element ref="texte"/>
+				
+<xsd:element ref="image"/>            
+	        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:element>
+       
+       <!--Definir l'element complexe description-->
+	   <xsd:element name="description">
+		    <xsd:complexType>
+			    <xsd:all>
+			        <xsd:element ref="liste"/>
+			        <xsd:element ref="texte"/>
+			        <xsd:element ref="paragraphe"/>
+			     </xsd:all>
+			</xsd:complexType>
+	   </xsd:element>
+<!-- Definir l'element coordonee -->
+    <xsd:element name="coordonnee">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="nom"/>
+                <xsd:element ref="adresse"/>
+                <xsd:element ref="nom_restaurateur"/>
+                <xsd:element ref="description"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+       
+  <!--  2emme partie-->
+  
+  <!-- Definir l'element complexe descriptionPlat-->
+        <xsd:element name="descriptionPlat">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element ref="paragraphe_unique"/>
+                    <xsd:element ref="texte" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+                 
+  <!-- Definir l'element complexe plat-->
+  <xsd:element name="plat">
+        <xsd:complexType>
+            <xsd:sequence>
+       			<xsd:element ref="descriptionPlat"/>
+            </xsd:sequence>
+            <xsd:attribute ref="typeDePlat" use="required"/> 
+        </xsd:complexType>
+   </xsd:element>
+   
+ <!--Definir l'element complexe carte-->
+    <xsd:element name="carte">
+        <xsd:complexType>
+            <xsd:sequence>
+            	<xsd:element ref="plat" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:attribute ref="id" use="required"/>
+        </xsd:complexType>
+    </xsd:element>
+    
+<!-- 3emme partie les menus-->
+    
+    <!-- Definition de prix-->
+            <xsd:element name="prix">
+	            <xsd:complexType >
+	                <xsd:attribute ref="devise" use="required"/>
+	                </xsd:complexType>        
+                </xsd:element>
+                
+    <!-- Definir l'element complexte menus-->
+             <xsd:element name="menu">
+                <xsd:complexType>
+                	<xsd:sequence>
+                		<xsd:element ref="prix"/>
+                	</xsd:sequence>
+                    <xsd:attribute ref="titre" use="required"/>
+                    <xsd:attribute ref="description" use="required"/>
+                </xsd:complexType>
+            </xsd:element>
+
+	<!-- Definir l'element complexte menus-->
+	<xsd:element name="menus">
+	    <xsd:complexType>
+	        <xsd:sequence>
+	            <xsd:element ref="menu" minOccurs="0" maxOccurs="unbounded"/>
+	            </xsd:sequence>
+	            <xsd:attribute ref="refCarte" use="required"/>
+	    </xsd:complexType>
+	</xsd:element>
+	
+<!-- Definir l'elemnt racine -->
+    <xsd:element name="fiche">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="coordonnee"/>
+                <xsd:element ref="carte"/>
+                <xsd:element ref="menus"/>
+            </xsd:sequence>
+        </xsd:complexType>
+
+        <!-- identifiant de la liste des carte -->
+        <xsd:key name="idCarte">
+            <xsd:selector xpath="./carte" />
+            <xsd:field xpath="@id" />
+        </xsd:key>
+
+        <!-- référence à l'identifiant du père dans l'élément enfant -->
+        <xsd:keyref name="idRefCarte" refer="idCarte">
+            <xsd:selector xpath="./enfant" />
+            <xsd:field xpath="@refCarte" />
+       </xsd:keyref>
+    </xsd:element>
+</xsd:schema>

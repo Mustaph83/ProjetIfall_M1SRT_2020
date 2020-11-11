@@ -1,0 +1,25 @@
+<!ELEMENT fiche (cordonnees, carte, menus)>
+<!ELEMENT cordonnee (nom, adresse, nom_restaurateur, description?)>
+<!ELEMENT nom (#PCDATA)>
+<!ELEMENT adresse (#PCDATA)>
+<!ELEMENT nom_restaurateur (#PCDATA)>
+<!ELEMENT description ((liste| paragraphe| texte)*)>
+<!ELEMENT liste (#PCDATA)>
+<!ELEMENT paragraphe (texte,image*)>
+<!ELEMENT texte (#PCDATA)>
+<!ELEMENT image EMPTY>
+<!ATTLIST image url CDATA #REQUIRED>
+<!ATTLIST image position (gauche|droite|centre) #REQUIRED>
+<!ELEMENT texte (#PCDATA)>
+<!ELEMENT carte (plat*)>
+<!ELEMENT plat (descriptioon?)>
+<!ATTLIST plat type (entree|dessert|plat|fromage) #REQUIRED>
+<!ATTLIST plat prix (fr|EURO) #REQUIRED>
+<!ATTLIST carte element_carte ID #REQUIRED>
+<!ELEMENT description (#PCDATA)>
+<!ELEMENT menus (menu*)>   
+<!ELEMENT menu EMPTY>
+<!ATTLIST menu titre CDATA #REQUIRED>
+<!ATTLIST menu description CDATA #REQUIRED>
+<!ATTLIST menu prix (fr|EURO) #REQUIRED>
+<!ATTLIST menu element_menu IDREF #REQUIRED>
